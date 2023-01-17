@@ -246,8 +246,8 @@ impl RTCSctpTransport {
                 }
             };
 
-            let mut max_retransmits = 0;
-            let mut max_packet_lifetime = 0;
+            let mut max_retransmits = None;
+            let mut max_packet_life_time = None;
             let val = dc.config.reliability_parameter as u16;
             let ordered;
 
@@ -260,19 +260,19 @@ impl RTCSctpTransport {
                 }
                 ChannelType::PartialReliableRexmit => {
                     ordered = true;
-                    max_retransmits = val;
+                    max_retransmits = Some(val);
                 }
                 ChannelType::PartialReliableRexmitUnordered => {
                     ordered = false;
-                    max_retransmits = val;
+                    max_retransmits = Some(val);
                 }
                 ChannelType::PartialReliableTimed => {
                     ordered = true;
-                    max_packet_lifetime = val;
+                    max_packet_life_time = Some(val);
                 }
                 ChannelType::PartialReliableTimedUnordered => {
                     ordered = false;
-                    max_packet_lifetime = val;
+                    max_packet_life_time = Some(val);
                 }
             };
 
@@ -287,7 +287,7 @@ impl RTCSctpTransport {
                     protocol: dc.config.protocol.clone(),
                     negotiated,
                     ordered,
-                    max_packet_life_time: max_packet_lifetime,
+                    max_packet_life_time,
                     max_retransmits,
                 },
                 Arc::clone(&param.setting_engine),

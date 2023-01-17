@@ -360,10 +360,10 @@ async fn test_data_channel_parameters_max_packet_life_time_exchange() -> Result<
     let api = APIBuilder::new().with_media_engine(m).build();
 
     let ordered = true;
-    let max_packet_life_time = 3u16;
+    let max_packet_life_time = Some(3u16);
     let options = RTCDataChannelInit {
         ordered: Some(ordered),
-        max_packet_life_time: Some(max_packet_life_time),
+        max_packet_life_time,
         ..Default::default()
     };
 
@@ -417,10 +417,10 @@ async fn test_data_channel_parameters_max_retransmits_exchange() -> Result<()> {
     let api = APIBuilder::new().with_media_engine(m).build();
 
     let ordered = false;
-    let max_retransmits = 3000u16;
+    let max_retransmits = Some(3000u16);
     let options = RTCDataChannelInit {
         ordered: Some(ordered),
-        max_retransmits: Some(max_retransmits),
+        max_retransmits,
         ..Default::default()
     };
 
@@ -731,10 +731,10 @@ async fn test_data_channel_parameters_go() -> Result<()> {
     //"MaxPacketLifeTime exchange"
     {
         let ordered = true;
-        let max_packet_life_time = 3u16;
+        let max_packet_life_time = Some(3u16);
         let options = RTCDataChannelInit {
             ordered: Some(ordered),
-            max_packet_life_time: Some(max_packet_life_time),
+            max_packet_life_time,
             ..Default::default()
         };
 
