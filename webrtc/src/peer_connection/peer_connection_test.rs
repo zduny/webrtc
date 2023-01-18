@@ -123,7 +123,7 @@ pub(crate) async fn signal_pair(
     let offer = pc_offer.create_offer(None).await?;
 
     let mut offer_gathering_complete = pc_offer.gathering_complete_promise().await;
-    pc_offer.set_local_description(offer).await?;
+    pc_offer.set_local_description(Some(offer)).await?;
 
     let _ = offer_gathering_complete.recv().await;
 
@@ -139,7 +139,7 @@ pub(crate) async fn signal_pair(
     let answer = pc_answer.create_answer(None).await?;
 
     let mut answer_gathering_complete = pc_answer.gathering_complete_promise().await;
-    pc_answer.set_local_description(answer).await?;
+    pc_answer.set_local_description(Some(answer)).await?;
 
     let _ = answer_gathering_complete.recv().await;
 
