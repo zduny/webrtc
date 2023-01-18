@@ -416,8 +416,11 @@ impl RTCDataChannel {
 
         let data_channel = self.data_channel.lock().await;
         if let Some(dc) = &*data_channel {
-            Ok(dc.close().await?)
+            let result = dc.close().await;
+            self.set_ready_state(RTCDataChannelState::Closed);
+            Ok(result?)
         } else {
+            self.set_ready_state(RTCDataChannelState::Closed);
             Ok(())
         }
     }
