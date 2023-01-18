@@ -173,7 +173,8 @@ impl DataChannel {
             let (mut n, ppi) = match self.stream.read_sctp(buf).await {
                 Ok((0, PayloadProtocolIdentifier::Unknown)) => {
                     // The incoming stream was reset or the reading half was shutdown
-                    return Ok((0, false));
+                    let _ = self.close().await;
+                    return Err(Error::ErrStreamClosed);
                 }
                 Ok((n, ppi)) => (n, ppi),
                 Err(err) => {
