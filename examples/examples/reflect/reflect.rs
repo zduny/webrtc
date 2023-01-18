@@ -287,7 +287,7 @@ async fn main() -> Result<()> {
     let mut gather_complete = peer_connection.gathering_complete_promise().await;
 
     // Sets the LocalDescription, and starts our UDP listeners
-    peer_connection.set_local_description(answer).await?;
+    peer_connection.set_local_description(Some(answer)).await?;
 
     // Block until ICE Gathering is complete, disabling trickle ICE
     // we do this because we only can exchange one signaling message

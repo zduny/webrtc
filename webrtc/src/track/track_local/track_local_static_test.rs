@@ -390,7 +390,7 @@ async fn test_track_local_static_binding_non_blocking() -> Result<()> {
     pc_answer.set_remote_description(offer).await?;
 
     let answer = pc_answer.create_answer(None).await?;
-    pc_answer.set_local_description(answer).await?;
+    pc_answer.set_local_description(Some(answer)).await?;
 
     if let Some(v) = vp8writer.as_any().downcast_ref::<TrackLocalStaticRTP>() {
         v.write(&[0u8; 20]).await?;

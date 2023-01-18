@@ -1188,8 +1188,7 @@ impl RTCPeerConnection {
         }
     }
 
-    /// set_local_description sets the SessionDescription of the local peer
-    pub async fn set_local_description(&self, mut desc: RTCSessionDescription) -> Result<()> {
+    async fn set_local_description_inner(&self, mut desc: RTCSessionDescription) -> Result<()> {
         if self.internal.is_closed.load(Ordering::SeqCst) {
             return Err(Error::ErrConnectionClosed);
         }
@@ -1282,6 +1281,35 @@ impl RTCPeerConnection {
             self.internal.ice_gatherer.gather().await
         } else {
             Ok(())
+        }
+    }
+
+    /// set_local_description sets the SessionDescription of the local peer
+    pub async fn set_local_description(&self, desc: Option<RTCSessionDescription>) -> Result<()> {
+        if let Some(desc) = desc {
+            self.set_local_description_inner(desc).await
+        } else {
+            match self.signaling_state() {
+                RTCSignalingState::Unspecified | RTCSignalingState::Stable => {
+                    let offer = self.create_offer(None).await?;
+                    self.set_local_description_inner(offer).await
+                }
+                RTCSignalingState::HaveLocalOffer | RTCSignalingState::HaveRemotePranswer => {
+                    let rollback = RTCSessionDescription {
+                        sdp_type: RTCSdpType::Rollback,
+                        ..RTCSessionDescription::default()
+                    };
+                    self.set_description(&rollback, StateChangeOp::SetLocal)
+                        .await?;
+                    let offer = self.create_offer(None).await?;
+                    self.set_local_description_inner(offer).await
+                }
+                RTCSignalingState::HaveRemoteOffer | RTCSignalingState::HaveLocalPranswer => {
+                    let answer = self.create_answer(None).await?;
+                    self.set_local_description_inner(answer).await
+                }
+                RTCSignalingState::Closed => Err(Error::ErrConnectionClosed),
+            }
         }
     }
 

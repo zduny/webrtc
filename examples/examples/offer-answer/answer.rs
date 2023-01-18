@@ -155,7 +155,7 @@ async fn remote_handler(req: Request<Body>) -> Result<Response<Body>, hyper::Err
             //println!("remote_handler Response: {}", resp.status());
 
             // Sets the LocalDescription, and starts our UDP listeners
-            if let Err(err) = pc.set_local_description(answer).await {
+            if let Err(err) = pc.set_local_description(Some(answer)).await {
                 panic!("{}", err);
             }
 

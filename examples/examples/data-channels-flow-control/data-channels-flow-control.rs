@@ -225,12 +225,12 @@ async fn main() -> anyhow::Result<()> {
 
     let reqs = requester.create_offer(None).await?;
 
-    requester.set_local_description(reqs.clone()).await?;
+    requester.set_local_description(Some(reqs.clone())).await?;
     responder.set_remote_description(reqs).await?;
 
     let resp = responder.create_answer(None).await?;
 
-    responder.set_local_description(resp.clone()).await?;
+    responder.set_local_description(Some(resp.clone())).await?;
     requester.set_remote_description(resp).await?;
 
     tokio::select! {

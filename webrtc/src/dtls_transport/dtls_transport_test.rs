@@ -77,7 +77,7 @@ async fn test_invalid_fingerprint_causes_failed() -> Result<()> {
         .await?;
 
     let offer = pc_offer.create_offer(None).await?;
-    pc_offer.set_local_description(offer).await?;
+    pc_offer.set_local_description(Some(offer)).await?;
 
     let timeout = tokio::time::sleep(Duration::from_secs(1));
     tokio::pin!(timeout);
@@ -96,7 +96,7 @@ async fn test_invalid_fingerprint_causes_failed() -> Result<()> {
 
             let mut answer = pc_answer.create_answer(None).await?;
 
-            pc_answer.set_local_description(answer.clone()).await?;
+            pc_answer.set_local_description(Some(answer.clone())).await?;
 
             answer.sdp = re.replace_all(answer.sdp.as_str(), "sha-256 AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA:AA\r").to_string();
 

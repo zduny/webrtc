@@ -339,7 +339,7 @@ async fn main() -> Result<()> {
 
     // Sets the LocalDescription, and starts our UDP listeners
     // Note: this will start the gathering of ICE candidates
-    peer_connection.set_local_description(offer).await?;
+    peer_connection.set_local_description(Some(offer)).await?;
 
     //println!("Post: {}", format!("http://{}/sdp", answer_addr));
     let req = match Request::builder()

@@ -192,7 +192,7 @@ async fn test_rtp_transceiver_set_codec_preferences_payload_type() -> Result<()>
 
     let offer = offer_pc.create_offer(None).await?;
 
-    offer_pc.set_local_description(offer.clone()).await?;
+    offer_pc.set_local_description(Some(offer.clone())).await?;
     answer_pc.set_remote_description(offer).await?;
 
     let answer = answer_pc.create_answer(None).await?;
@@ -226,12 +226,12 @@ async fn test_rtp_transceiver_direction_change() -> Result<()> {
 
     let offer = offer_pc.create_offer(None).await?;
 
-    offer_pc.set_local_description(offer.clone()).await?;
+    offer_pc.set_local_description(Some(offer.clone())).await?;
     answer_pc.set_remote_description(offer).await?;
 
     let answer = answer_pc.create_answer(None).await?;
     assert!(answer.sdp.contains("a=sendrecv"),);
-    answer_pc.set_local_description(answer.clone()).await?;
+    answer_pc.set_local_description(Some(answer.clone())).await?;
     offer_pc.set_remote_description(answer).await?;
 
     offer_transceiver
@@ -241,7 +241,7 @@ async fn test_rtp_transceiver_direction_change() -> Result<()> {
     let offer = offer_pc.create_offer(None).await?;
     assert!(offer.sdp.contains("a=inactive"),);
 
-    offer_pc.set_local_description(offer.clone()).await?;
+    offer_pc.set_local_description(Some(offer.clone())).await?;
     answer_pc.set_remote_description(offer).await?;
 
     let answer = answer_pc.create_answer(None).await?;
@@ -278,21 +278,21 @@ async fn test_rtp_transceiver_set_direction_causing_negotiation() -> Result<()> 
         .await?;
 
     let offer = offer_pc.create_offer(None).await?;
-    offer_pc.set_local_description(offer.clone()).await?;
+    offer_pc.set_local_description(Some(offer.clone())).await?;
     answer_pc.set_remote_description(offer).await?;
 
     let answer = answer_pc.create_answer(None).await?;
-    answer_pc.set_local_description(answer.clone()).await?;
+    answer_pc.set_local_description(Some(answer.clone())).await?;
     offer_pc.set_remote_description(answer).await?;
 
     assert_eq!(count.load(Ordering::SeqCst), 0);
 
     let offer = offer_pc.create_offer(None).await?;
-    offer_pc.set_local_description(offer.clone()).await?;
+    offer_pc.set_local_description(Some(offer.clone())).await?;
     answer_pc.set_remote_description(offer).await?;
 
     let answer = answer_pc.create_answer(None).await?;
-    answer_pc.set_local_description(answer.clone()).await?;
+    answer_pc.set_local_description(Some(answer.clone())).await?;
     offer_pc.set_remote_description(answer).await?;
 
     assert_eq!(count.load(Ordering::SeqCst), 0);
@@ -326,12 +326,12 @@ async fn test_rtp_transceiver_stopping() -> Result<()> {
 
     let offer = offer_pc.create_offer(None).await?;
 
-    offer_pc.set_local_description(offer.clone()).await?;
+    offer_pc.set_local_description(Some(offer.clone())).await?;
     answer_pc.set_remote_description(offer).await?;
 
     let answer = answer_pc.create_answer(None).await?;
     assert!(answer.sdp.contains("a=sendrecv"),);
-    answer_pc.set_local_description(answer.clone()).await?;
+    answer_pc.set_local_description(Some(answer.clone())).await?;
     offer_pc.set_remote_description(answer).await?;
 
     assert!(

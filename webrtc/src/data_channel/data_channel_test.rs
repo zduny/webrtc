@@ -1227,7 +1227,7 @@ async fn test_data_channel_non_standard_session_description() -> Result<()> {
     let offer = offer_pc.create_offer(None).await?;
 
     let mut offer_gathering_complete = offer_pc.gathering_complete_promise().await;
-    offer_pc.set_local_description(offer).await?;
+    offer_pc.set_local_description(Some(offer)).await?;
     let _ = offer_gathering_complete.recv().await;
 
     let mut offer = offer_pc.local_description().await.unwrap();
@@ -1254,7 +1254,7 @@ async fn test_data_channel_non_standard_session_description() -> Result<()> {
     let answer = answer_pc.create_answer(None).await?;
 
     let mut answer_gathering_complete = answer_pc.gathering_complete_promise().await;
-    answer_pc.set_local_description(answer).await?;
+    answer_pc.set_local_description(Some(answer)).await?;
     let _ = answer_gathering_complete.recv().await;
 
     let anwser = answer_pc.local_description().await.unwrap();
